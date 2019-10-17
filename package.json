@@ -1,0 +1,23 @@
+{
+  "name": "celebrity-movie-game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanherlihy/celebrity-movie-game.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ryanherlihy/celebrity-movie-game/issues"
+  },
+  "homepage": "https://github.com/ryanherlihy/celebrity-movie-game#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
