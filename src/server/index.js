@@ -37,6 +37,11 @@ const tmdbApiGet = ({ endpoint, queryFields = {} }) => {
   });
 };
 
+const getPopularPeople = () =>
+  tmdbApiGet({ endpoint: "/person/popular" })
+    .then(({ results }) => results)
+    .catch(err => console.log(err.message));
+
 const app = express();
 
 app.use(express.static("public"));
@@ -99,22 +104,46 @@ app.get("/getActors", (req, res) => {
     .then(({ cast }) => {
       // TODO: shuffle list of actors
 
-      const actorsInMovie = cast.slice(2).map(({ id, name, profile_path }) => ({
-        id,
-        name,
-        imageUrl: `${TMDB_IMAGE_BATH_PATH}${profile_path}`
-      }));
+      const castIds = cast.map(({ id }) => id);
 
-      // TODO: Get actors not in movie
+      const actorsInMovie = cast
+        .slice(0, 3)
+        .map(({ id, name, profile_path }) => ({
+          id,
+          name,
+          imageUrl: `${TMDB_IMAGE_BATH_PATH}${profile_path}`
+        }));
+
+      return {
+        castIds,
+        actorsInMovie
+      };
+    })
+    .then(({ castIds, actorsInMovie }) => {
       const actorsNotInMovie = [];
+      let index = 0;
 
-      // TODO: Return shuffled list
-      const actorsToGuessFrom = [...actorsInMovie, ...actorsNotInMovie];
-      res.send(actorsToGuessFrom);
+      getPopularPeople().then(people => {
+        while (actorsNotInMovie.length < 2) {
+          const { id, name, profile_path } = people[index];
+          if (!castIds.includes(id)) {
+            actorsNotInMovie.push({
+              id,
+              name,
+              imageUrl: `${TMDB_IMAGE_BATH_PATH}${profile_path}`
+            });
+          }
+          index++;
+        }
+
+        // TODO: Return shuffled list
+        const actorsToGuessFrom = [...actorsInMovie, ...actorsNotInMovie];
+        res.send(actorsToGuessFrom);
+      });
     })
     .catch(err => {
       console.log(err);
-      res.status(500).send("There was a problem retrieving cast members.");
+      res.status(500).send(err.message);
     });
 });
 
