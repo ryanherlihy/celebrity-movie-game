@@ -1,5 +1,6 @@
 const express = require("express");
 const https = require("https");
+const bodyParser = require("body-parser");
 
 const PORT = 3000;
 
@@ -39,6 +40,8 @@ const tmdbApiGet = ({ endpoint, queryFields = {} }) => {
 const app = express();
 
 app.use(express.static("public"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/index.html"));
@@ -86,10 +89,14 @@ app.get("/getMovies", (req, res) => {
 app.get("/getActors", (req, res) => {
   const { movieId } = req.query;
 
-  if (movieId) {
-    tmdbApiGet({
-      endpoint: `/movie/${movieId}/credits`
-    }).then(({ cast }) => {
+  if (!movieId) {
+    res.send("A movie ID must be specified.");
+  }
+
+  tmdbApiGet({
+    endpoint: `/movie/${movieId}/credits`
+  })
+    .then(({ cast }) => {
       // TODO: shuffle list of actors
 
       const actorsInMovie = cast.slice(2).map(({ id, name, profile_path }) => ({
@@ -104,8 +111,11 @@ app.get("/getActors", (req, res) => {
       // TODO: Return shuffled list
       const actorsToGuessFrom = [...actorsInMovie, ...actorsNotInMovie];
       res.send(actorsToGuessFrom);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send("There was a problem retrieving cast members.");
     });
-  }
 });
 
 /**
@@ -114,6 +124,47 @@ app.get("/getActors", (req, res) => {
  * Input: movie id, list of guessed actor ids, list of all actor ids
  * Output: movie id, list of all correct actor ids, user score
  */
-app.post("/submitGuess", (req, res) => {});
+app.post("/submitGuess", (req, res) => {
+  const { movieId, guessedActorIds, allActorIds } = req.body;
+
+  if (!movieId) {
+    res.send("A movie ID must be specified.");
+  }
+
+  tmdbApiGet({
+    endpoint: `/movie/${movieId}/credits`
+  })
+    .then(({ cast }) => {
+      const castIds = cast.map(({ id }) => id);
+
+      const guessIds = Array.isArray(guessedActorIds)
+        ? guessedActorIds
+        : [guessedActorIds];
+
+      const correctGuessCount = guessIds.reduce((count, actorId) => {
+        if (castIds.includes(parseInt(actorId, 10))) {
+          count++;
+        }
+        return count;
+      }, 0);
+
+      // The array of ids of the given actors who were cast members
+      const answer = allActorIds.filter(actorId =>
+        castIds.includes(parseInt(actorId, 10))
+      );
+
+      // TODO: save users score
+
+      res.send({
+        movieId,
+        answer,
+        correctGuessCount
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err.message);
+    });
+});
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}...`));
