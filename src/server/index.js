@@ -7,7 +7,7 @@ const TMDB_API_BASE_PATH = "https://api.themoviedb.org/3";
 const TMDB_API_KEY = "07befa3ecc55734111b95a62335771fb";
 const TMDB_IMAGE_BATH_PATH = "https://image.tmdb.org/t/p/w200/";
 
-const tmdbApiGet = ({ endpoint, queryFields }) => {
+const tmdbApiGet = ({ endpoint, queryFields = {} }) => {
   const query = Object.entries(queryFields)
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
@@ -15,7 +15,9 @@ const tmdbApiGet = ({ endpoint, queryFields }) => {
   return new Promise((resolve, reject) => {
     https
       .get(
-        `${TMDB_API_BASE_PATH}${endpoint}?api_key=${TMDB_API_KEY}&${query}`,
+        `${TMDB_API_BASE_PATH}${endpoint}?api_key=${TMDB_API_KEY}${
+          query ? "&" + query : ""
+        }`,
         apiRes => {
           let data = "";
 
@@ -49,7 +51,7 @@ app.get("/", (req, res) => {
  * Output: list of movies with titles matching input
  */
 app.get("/getMovies", (req, res) => {
-  const search = req.query.search;
+  const { search } = req.query;
 
   if (search) {
     tmdbApiGet({
@@ -60,7 +62,8 @@ app.get("/getMovies", (req, res) => {
     })
       .then(({ results }) => {
         res.send(
-          results.map(({ title, poster_path, release_date }) => ({
+          results.map(({ id, title, poster_path, release_date }) => ({
+            id,
             title,
             imageUrl: `${TMDB_IMAGE_BATH_PATH}${poster_path}`,
             releaseYear: new Date(release_date).getFullYear()
@@ -80,7 +83,30 @@ app.get("/getMovies", (req, res) => {
  * Input: movie id
  * Output: list of actors
  */
-app.get("/getActors", (req, res) => {});
+app.get("/getActors", (req, res) => {
+  const { movieId } = req.query;
+
+  if (movieId) {
+    tmdbApiGet({
+      endpoint: `/movie/${movieId}/credits`
+    }).then(({ cast }) => {
+      // TODO: shuffle list of actors
+
+      const actorsInMovie = cast.slice(2).map(({ id, name, profile_path }) => ({
+        id,
+        name,
+        imageUrl: `${TMDB_IMAGE_BATH_PATH}${profile_path}`
+      }));
+
+      // TODO: Get actors not in movie
+      const actorsNotInMovie = [];
+
+      // TODO: Return shuffled list
+      const actorsToGuessFrom = [...actorsInMovie, ...actorsNotInMovie];
+      res.send(actorsToGuessFrom);
+    });
+  }
+});
 
 /**
  * Endpoint for user to submit a guess
