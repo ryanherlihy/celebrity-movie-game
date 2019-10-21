@@ -30,8 +30,8 @@ const MovieSearch = ({ onSelectMovie }) => {
       });
   };
 
-  const makeResultClickHandler = movieId => () => {
-    onSelectMovie(movieId);
+  const makeResultClickHandler = movie => () => {
+    onSelectMovie(movie);
   };
 
   const showSearchResults = searchResults && searchResults.length > 0;
@@ -56,7 +56,7 @@ const MovieSearch = ({ onSelectMovie }) => {
         <ol>
           {searchResults.map(movie => (
             <li key={movie.id}>
-              <button onClick={makeResultClickHandler(movie.id)}>
+              <button onClick={makeResultClickHandler(movie)}>
                 <img src={movie.imageUrl} alt="" />
                 {movie.title}
               </button>
