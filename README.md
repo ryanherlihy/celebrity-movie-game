@@ -1,1 +1,1 @@
-# celebrity-movie-game
+# Celebrity Movie Game
