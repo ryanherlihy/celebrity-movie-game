@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Question from "./Question";
+import Answer from "./Answer";
 
 const NUM_GUESSES = 3;
 
-const Game = ({ movie, on }) => {
+const Game = ({ movie, onChangeMovieRequest, onGuessSubmitComplete }) => {
   const [isLoadingActors, setIsLoadingActors] = useState(false);
   const [actors, setActors] = useState([]);
   const [guessedActorIds, setGuessedActorIds] = useState([]);
   const [userMessage, setUserMessage] = useState("");
+
+  const [correctAnswers, setCorrectAnswers] = useState([]);
+  const [correctGuessCount, setCorrectGuessCount] = useState(0);
+
+  const [showQuestion, setShowQuestion] = useState(false);
+  const [showAnswer, setShowAnswer] = useState(false);
+  const [showNoResultsMessage, setShowNoResultsMessage] = useState(false);
 
   useEffect(() => {
     setIsLoadingActors(true);
@@ -20,6 +29,12 @@ const Game = ({ movie, on }) => {
       .then(res => {
         setActors(res.data);
         setIsLoadingActors(false);
+
+        if (res.data.length === 0) {
+          setShowNoResultsMessage(true);
+        } else {
+          setShowQuestion(true);
+        }
       })
       .catch(err => {
         console.log(err.message);
@@ -27,15 +42,40 @@ const Game = ({ movie, on }) => {
       });
   }, []);
 
-  const makeActorCheckboxChangeHandler = actorId => e => {
-    console.log(actorId, e.target.checked);
-    if (e.target.checked) {
+  const handleChangeMovieClick = () => {
+    onChangeMovieRequest();
+  };
+
+  const getQuestionActors = () =>
+    actors.map(actor => ({
+      ...actor,
+      isSelected: guessedActorIds.includes(actor.id)
+    }));
+
+  const handleChangeActorCheckbox = ({ actorId, isChecked }) => {
+    if (isChecked) {
       setGuessedActorIds([...guessedActorIds, actorId]);
     } else {
       setGuessedActorIds(guessedActorIds.filter(id => id !== actorId));
     }
     setUserMessage("");
   };
+
+  const getAnswerActors = () =>
+    actors
+      .map(actor => ({
+        ...actor,
+        isGuessed: guessedActorIds.includes(actor.id),
+        isCorrect: correctAnswers.includes(actor.id)
+      }))
+      .sort((a, b) => {
+        if (a.isCorrect && !b.isCorrect) {
+          return -1;
+        } else if (!a.isCorrect && b.isCorrect) {
+          return 1;
+        }
+        return 0;
+      });
 
   const handleSubmitGuess = e => {
     e.preventDefault();
@@ -60,6 +100,11 @@ const Game = ({ movie, on }) => {
         })
         .then(res => {
           console.log(res.data);
+          onGuessSubmitComplete(res.data);
+          setCorrectAnswers(res.data.answer);
+          setCorrectGuessCount(res.data.correctGuessCount);
+          setShowQuestion(false);
+          setShowAnswer(true);
         })
         .catch(err => {
           console.log(err.message);
@@ -67,39 +112,37 @@ const Game = ({ movie, on }) => {
     }
   };
 
-  const showActors = !isLoadingActors && actors.length > 0;
+  const handleChooseNextMovie = () => {
+    onChangeMovieRequest();
+  };
 
   return (
     <section>
       <header>
         <img src={movie.imageUrl} alt="" />
         <h2>{movie.title}</h2>
+        <button type="button" onClick={handleChangeMovieClick}>
+          Change Movie
+        </button>
       </header>
       {isLoadingActors && <p>Loading...</p>}
-      {showActors && (
-        <form onSubmit={handleSubmitGuess}>
-          <fieldset>
-            <legend>Which 3 appeared in {movie.title}?</legend>
-            {actors.map(
-              actor =>
-                console.log(guessedActorIds.includes(actor.id)) || (
-                  <label>
-                    <img src={actor.imageUrl} alt="" />
-                    {actor.name}
-                    <input
-                      type="checkbox"
-                      name="guessedActorIds"
-                      value={actor.id}
-                      checked={guessedActorIds.includes(actor.id)}
-                      onChange={makeActorCheckboxChangeHandler(actor.id)}
-                    />
-                  </label>
-                )
-            )}
-          </fieldset>
-          {userMessage && <p>{userMessage}</p>}
-          <button>Submit Guess</button>
-        </form>
+      {showNoResultsMessage && "No results."}
+      {showQuestion && (
+        <Question
+          movieTitle={movie.title}
+          actors={getQuestionActors()}
+          userMessage={userMessage}
+          onChangeActorCheckbox={handleChangeActorCheckbox}
+          onSubmitGuess={handleSubmitGuess}
+        />
+      )}
+      {showAnswer && (
+        <Answer
+          actors={getAnswerActors()}
+          correctGuessCount={correctGuessCount}
+          totalCorrectCount={correctAnswers.length}
+          onChooseNextMovieClick={handleChooseNextMovie}
+        />
       )}
     </section>
   );
