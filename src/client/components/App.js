@@ -1,5 +1,14 @@
 import React from "react";
+import Header from "./Header";
+import MovieSearch from "./MovieSearch";
 
-const App = () => <h1>Celebrity Movie Game</h1>;
+const App = () => (
+  <>
+    <Header />
+    <div className="container">
+      <MovieSearch />
+    </div>
+  </>
+);
 
 export default App;

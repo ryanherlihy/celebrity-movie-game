@@ -58,28 +58,30 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/getMovies", (req, res) => {
   const { search } = req.query;
 
-  if (search) {
-    tmdbApiGet({
-      endpoint: "/search/movie",
-      queryFields: {
-        query: search
-      }
-    })
-      .then(({ results }) => {
-        res.send(
-          results.map(({ id, title, poster_path, release_date }) => ({
-            id,
-            title,
-            imageUrl: `${TMDB_IMAGE_BATH_PATH}${poster_path}`,
-            releaseYear: new Date(release_date).getFullYear()
-          }))
-        );
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).send("There was a problem retrieving search results.");
-      });
+  if (!search) {
+    res.status(400).send("No search specified");
   }
+
+  tmdbApiGet({
+    endpoint: "/search/movie",
+    queryFields: {
+      query: search
+    }
+  })
+    .then(({ results }) => {
+      res.send(
+        results.map(({ id, title, poster_path, release_date }) => ({
+          id,
+          title,
+          imageUrl: `${TMDB_IMAGE_BATH_PATH}${poster_path}`,
+          releaseYear: new Date(release_date).getFullYear()
+        }))
+      );
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).send("There was a problem retrieving search results.");
+    });
 });
 
 /**
