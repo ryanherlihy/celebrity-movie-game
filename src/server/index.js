@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
@@ -44,13 +45,9 @@ const getPopularPeople = () =>
 
 const app = express();
 
-app.use(express.static("public"));
+app.use(express.static("dist"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname + "/index.html"));
-});
 
 /**
  * Endpoint to return list of movies for user to search from
