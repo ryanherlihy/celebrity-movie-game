@@ -1,0 +1,21 @@
+.Header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-2);
+  color: var(--color-5);
+  padding: 20px;
+}
+
+.Header-title {
+  font-size: 1.5rem;
+  text-decoration: none;
+}
+
+.Header-title:visited {
+  color: var(--color-5);
+}
+
+.Header-score {
+  font-size: 1.25rem;
+}

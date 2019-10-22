@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./MovieSearch.css";
 
 const MovieSearch = ({ onSelectMovie }) => {
   const [searchValue, setSearchValue] = useState("");
@@ -38,34 +39,42 @@ const MovieSearch = ({ onSelectMovie }) => {
   const showEmptyResultsMessage = searchResults && searchResults.length === 0;
 
   return (
-    <div>
+    <section className="MovieSearch">
       <h1>Search for a movie...</h1>
-      <form onSubmit={handleSearchSubmit}>
-        <label>
-          Movie Search
+      <form className="MovieSearch-form" onSubmit={handleSearchSubmit}>
+        <label className="MovieSearch-searchBox">
+          <span className="MovieSearch-searchBoxLabel">Movie Search</span>
           <input
+            className="MovieSearch-searchBoxInput"
             type="search"
             placeholder="Search"
             value={searchValue}
             onChange={handleInputChange}
           />
         </label>
-        <button>Search</button>
+        <button className="MovieSearch-searchBoxButton">Search</button>
       </form>
       {showSearchResults && (
-        <ol>
+        <ol className="MovieSearch-resultList">
           {searchResults.map(movie => (
-            <li key={movie.id}>
-              <button onClick={makeResultClickHandler(movie)}>
-                <img src={movie.imageUrl} alt="" />
-                {movie.title}
+            <li key={movie.id} className="MovieSearch-resultListItem">
+              <button
+                className="MovieSearch-resultButton"
+                onClick={makeResultClickHandler(movie)}
+              >
+                <img
+                  className="MovieSearch-resultImg"
+                  src={movie.imageUrl}
+                  alt=""
+                />
+                <span className="MovieSearch-resultTitle">{movie.title}</span>
               </button>
             </li>
           ))}
         </ol>
       )}
       {showEmptyResultsMessage && <p>No results found for your search.</p>}
-    </div>
+    </section>
   );
 };
 

@@ -99,7 +99,6 @@ const Game = ({ movie, onChangeMovieRequest, onGuessSubmitComplete }) => {
           allActorIds: actors.map(({ id }) => id)
         })
         .then(res => {
-          console.log(res.data);
           onGuessSubmitComplete(res.data);
           setCorrectAnswers(res.data.answer);
           setCorrectGuessCount(res.data.correctGuessCount);

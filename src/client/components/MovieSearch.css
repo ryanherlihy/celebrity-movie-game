@@ -1,0 +1,66 @@
+.MovieSearch-form {
+  display: flex;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.MovieSearch-searchBox {
+  flex-grow: 1;
+}
+
+.MovieSearch-searchBoxLabel {
+  position: absolute;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; /* added line */
+}
+
+.MovieSearch-searchBoxInput {
+  width: 100%;
+  padding: 10px;
+}
+
+.MovieSearch-searchBoxButton {
+  background-color: var(--color-3);
+  color: #fff;
+  padding: 0 20px;
+}
+
+.MovieSearch-searchBoxButton:focus,
+.MovieSearch-searchBoxButton:hover {
+  background-color: var(--color-4);
+}
+
+.MovieSearch-resultList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.MovieSearch-resultListItem {
+  width: 200px;
+  margin: 20px;
+}
+
+.MovieSearch-resultButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: transparent;
+  color: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.MovieSearch-resultButton:hover,
+.MovieSearch-resultButton:focus {
+  box-shadow: 0 0 5px #fff;
+}
+
+.MovieSearch-resultTitle {
+  padding: 10px 15px;
+}

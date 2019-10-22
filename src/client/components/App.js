@@ -3,6 +3,7 @@ import Header from "./Header";
 import MovieSearch from "./MovieSearch";
 import Game from "./Game";
 import Answer from "./Answer";
+import "./App.css";
 
 const App = () => {
   const [showMovieSearch, setShowMovieSearch] = useState(true);
@@ -31,9 +32,9 @@ const App = () => {
   };
 
   return (
-    <>
+    <div className="App">
       <Header userScore={userScore} />
-      <div className="container">
+      <div className="App-content">
         {showMovieSearch && <MovieSearch onSelectMovie={handleSelectMovie} />}
         {showGame && (
           <Game
@@ -43,7 +44,7 @@ const App = () => {
           />
         )}
       </div>
-    </>
+    </div>
   );
 };
 

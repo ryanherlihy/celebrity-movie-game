@@ -1,9 +1,12 @@
 import React from "react";
+import "./Header.css";
 
 const Header = ({ userScore = 0 }) => (
-  <header>
-    <a href="/">Celebrity Movie Game</a>
-    <p>Score:&nbsp;{userScore}</p>
+  <header className="Header">
+    <a className="Header-title" href="/">
+      Celebrity Movie Game
+    </a>
+    <p className="Header-score">Score:&nbsp;{userScore}</p>
   </header>
 );
 

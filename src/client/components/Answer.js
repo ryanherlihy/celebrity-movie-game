@@ -9,9 +9,7 @@ const Answer = ({
 }) => {
   return (
     <section>
-      <header>
-        <h2>Results</h2>
-      </header>
+      <h2>Results</h2>
       <p>
         {(() => {
           const scoreRatio = correctGuessCount / totalCorrectCount;
