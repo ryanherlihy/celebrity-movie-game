@@ -9,6 +9,27 @@ const TMDB_API_BASE_PATH = "https://api.themoviedb.org/3";
 const TMDB_API_KEY = "07befa3ecc55734111b95a62335771fb";
 const TMDB_IMAGE_BATH_PATH = "https://image.tmdb.org/t/p/w200/";
 
+// Borrowed from https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+const shuffleArray = array => {
+  let currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+};
+
 const tmdbApiGet = ({ endpoint, queryFields = {} }) => {
   const query = Object.entries(queryFields)
     .map(([key, value]) => `${key}=${value}`)
@@ -123,8 +144,9 @@ app.get("/getActors", (req, res) => {
       let index = 0;
 
       getPopularPeople().then(people => {
+        const shuffledPeople = shuffleArray(people);
         while (actorsNotInMovie.length < 2) {
-          const { id, name, profile_path } = people[index];
+          const { id, name, profile_path } = shuffledPeople[index];
           if (!castIds.includes(id)) {
             actorsNotInMovie.push({
               id,
@@ -135,8 +157,10 @@ app.get("/getActors", (req, res) => {
           index++;
         }
 
-        // TODO: Return shuffled list
-        const actorsToGuessFrom = [...actorsInMovie, ...actorsNotInMovie];
+        const actorsToGuessFrom = shuffleArray([
+          ...actorsInMovie,
+          ...actorsNotInMovie
+        ]);
         res.send(actorsToGuessFrom);
       });
     })

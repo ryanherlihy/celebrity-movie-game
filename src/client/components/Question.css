@@ -1,0 +1,67 @@
+.Question-fieldset {
+  margin-bottom: 30px;
+}
+
+.Question-legend {
+  font-size: 1.5rem;
+}
+
+.Question-choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.Question-actorLabel {
+  position: relative;
+}
+
+.Question-actor {
+  display: inline-block;
+  width: 200px;
+  margin: 20px;
+  cursor: pointer;
+}
+
+.Question-actor.is-selected {
+  color: #fff;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.Question-actorName {
+  padding: 10px 15px;
+}
+
+.Question-actorCheckbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.Question-actorCheckbox:hover + .Question-actor,
+.Question-actorCheckbox:focus + .Question-actor,
+.Question-actorCheckbox:active + .Question-actor,
+.Question-actorCheckbox:checked + .Question-actor {
+  box-shadow: 0 0 5px #fff;
+  transform: scale(1.05);
+  transition: transform ease-in 0.1s;
+}
+
+.Question-actorCheckbox:active + .Question-actor,
+.Question-actorCheckbox:checked + .Question-actor {
+  box-shadow: 0 0 5px 3px #fff;
+}
+
+.Question-message {
+  margin-bottom: 20px;
+}
+
+.Question-submitBtn {
+  background-color: var(--color-3);
+  color: #fff;
+  border-radius: 4px;
+  padding: 20px 40px;
+  font-size: 1.25rem;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Question from "./Question";
 import Answer from "./Answer";
+import "./Game.css";
 
 const NUM_GUESSES = 3;
 
@@ -116,16 +117,20 @@ const Game = ({ movie, onChangeMovieRequest, onGuessSubmitComplete }) => {
   };
 
   return (
-    <section>
-      <header>
-        <img src={movie.imageUrl} alt="" />
-        <h2>{movie.title}</h2>
-        <button type="button" onClick={handleChangeMovieClick}>
+    <section className="Game">
+      <header className="Game-header">
+        <img className="Game-headerImg" src={movie.imageUrl} alt="" />
+        <h2 className="Game-headerText">{movie.title}</h2>
+        <button
+          className="Game-changeMovieBtn"
+          type="button"
+          onClick={handleChangeMovieClick}
+        >
           Change Movie
         </button>
       </header>
       {isLoadingActors && <p>Loading...</p>}
-      {showNoResultsMessage && "No results."}
+      {showNoResultsMessage && <p>No results.</p>}
       {showQuestion && (
         <Question
           movieTitle={movie.title}

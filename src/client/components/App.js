@@ -13,12 +13,8 @@ const App = () => {
 
   const handleSelectMovie = movie => {
     setSelectedMovie(movie);
-    // show game page
     setShowMovieSearch(false);
     setShowGame(true);
-    // get actors
-    // show loading
-    // set actors
   };
 
   const handleChangeMovieRequest = () => {

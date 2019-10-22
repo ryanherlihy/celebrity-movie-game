@@ -43,7 +43,7 @@ const MovieSearch = ({ onSelectMovie }) => {
       <h1>Search for a movie...</h1>
       <form className="MovieSearch-form" onSubmit={handleSearchSubmit}>
         <label className="MovieSearch-searchBox">
-          <span className="MovieSearch-searchBoxLabel">Movie Search</span>
+          <span className="visually-hidden">Movie Search</span>
           <input
             className="MovieSearch-searchBoxInput"
             type="search"

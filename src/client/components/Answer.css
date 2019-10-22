@@ -1,0 +1,51 @@
+.Answer-reaction {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.Answer-results {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.Answer-actorsList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.Answer-actor {
+  width: 200px;
+  margin: 20px;
+}
+
+.Answer-actor.is-correct {
+  box-shadow: 0 0 10px 5px #fff;
+  transform: scale(1.05);
+}
+
+.Answer-actor.is-guessed.is-correct {
+  box-shadow: 0 0 10px 5px #8fff91;
+}
+
+.Answer-actor.is-guessed:not(.is-correct) {
+  box-shadow: 0 0 10px 5px #f00;
+}
+
+.Answer-actor:not(.is-correct) {
+  opacity: 0.7;
+  transform: scale(0.8);
+}
+
+.Answer-actorName {
+  padding: 10px 15px;
+}
+
+.Answer-nextMovieBtn {
+  background-color: var(--color-3);
+  color: #fff;
+  border-radius: 4px;
+  padding: 10px 20px;
+}

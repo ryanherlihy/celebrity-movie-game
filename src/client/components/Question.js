@@ -1,4 +1,6 @@
 import React from "react";
+import cx from "classnames";
+import "./Question.css";
 
 const Question = ({
   movieTitle,
@@ -12,25 +14,40 @@ const Question = ({
   };
 
   return (
-    <form onSubmit={onSubmitGuess}>
-      <fieldset>
-        <legend>Which 3 appeared in {movieTitle}?</legend>
-        {actors.map(actor => (
-          <label key={actor.id}>
-            <img src={actor.imageUrl} alt="" />
-            {actor.name}
-            <input
-              type="checkbox"
-              name="guessedActorIds"
-              value={actor.id}
-              checked={actor.isSelected}
-              onChange={makeActorCheckboxChangeHandler(actor.id)}
-            />
-          </label>
-        ))}
+    <form className="Question" onSubmit={onSubmitGuess}>
+      <fieldset className="Question-fieldset">
+        <legend className="Question-legend">
+          Which 3 appeared in {movieTitle}?
+        </legend>
+        <div className="Question-choices">
+          {actors.map(actor => (
+            <label className="Question-actorLabel" key={actor.id}>
+              <input
+                className="Question-actorCheckbox"
+                type="checkbox"
+                name="guessedActorIds"
+                value={actor.id}
+                checked={actor.isSelected}
+                onChange={makeActorCheckboxChangeHandler(actor.id)}
+              />
+              <span
+                className={cx("Question-actor", {
+                  "is-selected": actor.isSelected
+                })}
+              >
+                <img
+                  className="Question-actorImg"
+                  src={actor.imageUrl}
+                  alt=""
+                />
+                <span className="Question-actorName">{actor.name}</span>
+              </span>
+            </label>
+          ))}
+        </div>
       </fieldset>
-      {userMessage && <p>{userMessage}</p>}
-      <button>Submit Guess</button>
+      {userMessage && <p className="Question-message">{userMessage}</p>}
+      <button className="Question-submitBtn">Submit Guess</button>
     </form>
   );
 };

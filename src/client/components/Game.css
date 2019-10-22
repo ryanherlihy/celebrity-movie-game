@@ -1,0 +1,17 @@
+.Game-header {
+  margin-bottom: 50px;
+}
+
+.Game-headerImg,
+.Game-headerText {
+  margin-bottom: 20px;
+}
+
+.Game-changeMovieBtn {
+  color: var(--color-3);
+}
+
+.Game-changeMovieBtn:focus,
+.Game-changeMovieBtn:hover {
+  color: var(--color-5);
+}

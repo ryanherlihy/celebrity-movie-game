@@ -1,5 +1,6 @@
 import React from "react";
 import cx from "classnames";
+import "./Answer.css";
 
 const Answer = ({
   actors,
@@ -9,8 +10,8 @@ const Answer = ({
 }) => {
   return (
     <section>
-      <h2>Results</h2>
-      <p>
+      <h3>Results</h3>
+      <p className="Answer-reaction">
         {(() => {
           const scoreRatio = correctGuessCount / totalCorrectCount;
           if (scoreRatio === 1) {
@@ -23,10 +24,10 @@ const Answer = ({
           return "Uh oh...";
         })()}
       </p>
-      <p>
+      <p className="Answer-results">
         You guessed {correctGuessCount} out of {totalCorrectCount}
       </p>
-      <ol>
+      <ol className="Answer-actorsList">
         {actors.map(actor => (
           <li
             key={actor.id}
@@ -36,11 +37,15 @@ const Answer = ({
             })}
           >
             <img src={actor.imageUrl} alt="" />
-            {actor.name}
+            <span className="Answer-actorName">{actor.name}</span>
           </li>
         ))}
       </ol>
-      <button type="button" onClick={onChooseNextMovieClick}>
+      <button
+        className="Answer-nextMovieBtn"
+        type="button"
+        onClick={onChooseNextMovieClick}
+      >
         Choose Next Movie
       </button>
     </section>
