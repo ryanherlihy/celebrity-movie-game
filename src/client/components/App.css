@@ -48,7 +48,7 @@ button {
 .App {
   background-color: var(--color-1);
   color: var(--color-5);
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .App-content {
